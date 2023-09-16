@@ -1,13 +1,14 @@
 package com.catchybackend.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
+@Entity
 @Data
-public class User {
-    String email;
-    String password;
-    @Override
-    public String toString(){
-        return this.email+" "+ this.password;
-    }
+@Table(name="user")
+public class User extends BaseEntity{
+    private String email;
+    private String password;
 }
