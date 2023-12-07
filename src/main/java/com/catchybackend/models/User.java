@@ -1,14 +1,13 @@
 package com.catchybackend.models;
 
+import com.ts.core.entities.IUser;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Data
-@Table(name="user")
-public class User extends BaseEntity{
-    private String email;
-    private String password;
+@Table(name = "user")@Data
+public class User extends IUser {
+    private String firstName;
+    private String lastName;
 }

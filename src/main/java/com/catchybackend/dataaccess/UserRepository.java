@@ -1,10 +1,9 @@
 package com.catchybackend.dataaccess;
 
 import com.catchybackend.models.User;
+import com.ts.core.repository.IUserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends IUserRepository<User>, JpaRepository<User,Long> {
 
 }
