@@ -23,4 +23,5 @@ public class PostController {
     public ResponseEntity<String> deletePost(@RequestParam(name = "id") long id){
         return postService.deletePost(id);
     }
+//TODO: İnterfaceler üzerinden bağımlılık oluştur.
 }
