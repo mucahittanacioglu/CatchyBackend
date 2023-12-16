@@ -1,5 +1,6 @@
 package com.catchybackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ts.core.entities.IUser;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,9 +18,11 @@ public class User extends IUser {
     @Column(name = "last_name")
     private String lastName;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "participants")
     private Set<Conversation> conversations = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_friends",

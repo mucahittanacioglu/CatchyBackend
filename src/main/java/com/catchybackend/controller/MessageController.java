@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/conversation")
+@CrossOrigin(origins = "http://localhost:5173")
 public class MessageController {
     @Autowired
     IConversationService conversationService;
