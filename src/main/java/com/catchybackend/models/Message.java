@@ -2,9 +2,12 @@ package com.catchybackend.models;
 
 import com.ts.core.entities.IEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "message")
@@ -14,15 +17,14 @@ import java.util.List;
 @NoArgsConstructor
 public class Message extends IEntity {
 
-    @ManyToOne()
-    @Column(name = "owner_user")
-    private User owner;
+    @ManyToOne
+    private Conversation ownerConversation;
 
-    @OneToMany(mappedBy = "ownerMessage", cascade = CascadeType.ALL)
-    private List<MessageDetails> messageDetails;
+    @Column(name = "text")
+    private String text;
 
     @ManyToOne
-    @Column(name="receiver_user")
-    private User receiverUser;
+    private User sender;
 
+    private LocalDateTime timestamp;
 }

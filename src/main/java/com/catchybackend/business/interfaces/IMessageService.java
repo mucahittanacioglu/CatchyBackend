@@ -1,10 +1,10 @@
 package com.catchybackend.business.interfaces;
 
-import com.catchybackend.models.Message;
+import com.catchybackend.models.Conversation;
 
 import java.util.List;
 
 public interface IMessageService {
-    List<Message> findAllByUserId(Long id);
+    List<Conversation> findAllByUserId(Long id);
 
 }

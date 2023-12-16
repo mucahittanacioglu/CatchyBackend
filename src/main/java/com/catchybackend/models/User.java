@@ -4,7 +4,9 @@ import com.ts.core.entities.IUser;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")@Data
@@ -14,7 +16,7 @@ public class User extends IUser {
     @Column(name = "first_name")
     private String lastName;
 
-    @OneToMany(mappedBy = "ownerUser", cascade = CascadeType.ALL)
-    private List<Message> messages;
+    @ManyToMany(mappedBy = "participants")
+    private Set<Conversation> conversations = new HashSet<>();
 
 }
