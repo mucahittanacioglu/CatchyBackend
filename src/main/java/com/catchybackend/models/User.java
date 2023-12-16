@@ -4,6 +4,7 @@ import com.ts.core.entities.IUser;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,10 +14,17 @@ import java.util.Set;
 public class User extends IUser {
     @Column(name = "first_name")
     private String firstName;
-    @Column(name = "first_name")
+    @Column(name = "last_name")
     private String lastName;
 
     @ManyToMany(mappedBy = "participants")
     private Set<Conversation> conversations = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friends = new ArrayList<>();
 }

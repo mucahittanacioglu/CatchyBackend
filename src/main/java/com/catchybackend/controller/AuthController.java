@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -34,5 +36,14 @@ public class AuthController {
     @PostMapping("/update")
     public String update(@RequestBody User user) {
         return authService.update(user);
+    }
+    @PostMapping("/addFriend")
+    public ResponseEntity<Boolean>  addFriend(@RequestParam(name="userId")Long userId,@RequestParam(name="friendId")Long friendId){
+        return authService.addFriend(userId,friendId);
+    }
+    @GetMapping("/getFriends")
+    public ResponseEntity<List<User>> getFriends(@RequestParam(name="userId")Long userId)
+    {
+        return authService.getFriends(userId);
     }
 }

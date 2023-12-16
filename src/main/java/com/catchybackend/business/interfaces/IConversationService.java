@@ -4,7 +4,8 @@ import com.catchybackend.models.Conversation;
 
 import java.util.List;
 
-public interface IMessageService {
+public interface IConversationService {
     List<Conversation> findAllByUserId(Long id);
+    Conversation createConversation(Long starterId, Long receiverId);
 
 }

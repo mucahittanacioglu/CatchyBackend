@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +58,41 @@ public class AuthService implements IUserService {
         userRepository.save(userToSave);
         var jwt = jwtService.generateToken(userS);
         return ResponseEntity.ok().body(jwt);
+
+    }
+
+    @Override
+    public ResponseEntity<Boolean> addFriend(Long userId, Long friendId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if(userOpt.isPresent()){
+            Optional<User> friendOpt = userRepository.findById(friendId);
+            if(friendOpt.isPresent()){
+                User usr = userOpt.get();
+                User frnd = friendOpt.get();
+                usr.getFriends().add(frnd);
+                frnd.getFriends().add(usr);
+
+                userRepository.save(usr);
+                userRepository.save(frnd);
+                return ResponseEntity.ok(true);
+            }
+
+            return ResponseEntity.ok(false);
+        }else{
+            //TODO:Hata dönmeli
+            return ResponseEntity.ok(false);
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<User>> getFriends(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if(userOpt.isPresent()){
+            return ResponseEntity.ok(userOpt.get().getFriends());
+        }else{
+            //TODO:Hata dönmeli
+            return ResponseEntity.ok(new ArrayList<>());
+        }
 
     }
 
