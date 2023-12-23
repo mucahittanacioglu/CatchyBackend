@@ -1,11 +1,13 @@
 package com.catchybackend.business.concrete;
 
 import com.catchybackend.business.dtos.UserLoginDto;
+import com.catchybackend.business.interfaces.IAuthService;
 import com.catchybackend.business.interfaces.IUserService;
 import com.catchybackend.dataaccess.UserRepository;
 import com.catchybackend.models.User;
 import com.ts.core.security.Role;
 import com.ts.core.security.jwt.IJwtService;
+import com.ts.core.security.jwt.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,12 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IUserService {
+public class AuthService implements IAuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IJwtService jwtService;
@@ -33,8 +33,8 @@ public class AuthService implements IUserService {
         var tempUser = userRepository.getUserByEmail(userLoginDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
 
-        var user = new org.springframework.security.core.userdetails.User(
-                tempUser.getEmail(), tempUser.getPassword(), new ArrayList<>()
+        var user = new MyUserDetails(
+                tempUser.getEmail(), tempUser.getPassword(), new ArrayList<>(),tempUser.getId()
         );
         var jwt = jwtService.generateToken(user);
         return ResponseEntity.ok().body(jwt);
@@ -42,9 +42,9 @@ public class AuthService implements IUserService {
 
     @Override
     public ResponseEntity<String> register(User user) {
-        var userS = org.springframework.security.core.userdetails.User.builder().username(user.getEmail())
-                .password(passwordEncoder.encode(user.getPassword())).build();
-
+        var userS = new MyUserDetails(
+                user.getEmail(), passwordEncoder.encode(user.getPassword()), new ArrayList<>(),-1l
+        );
         var userToSave = new User();
 
         userToSave.setFirstName(user.getFirstName());
@@ -55,48 +55,11 @@ public class AuthService implements IUserService {
         userToSave.addRole(Role.ADD);
         userToSave.addRole(Role.UPDATE);
 
-        userRepository.save(userToSave);
+        var savedUser = userRepository.save(userToSave);
+        userS.setUserId(savedUser.getId());
         var jwt = jwtService.generateToken(userS);
         return ResponseEntity.ok().body(jwt);
 
     }
 
-    @Override
-    public ResponseEntity<Boolean> addFriend(Long userId, Long friendId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if(userOpt.isPresent()){
-            Optional<User> friendOpt = userRepository.findById(friendId);
-            if(friendOpt.isPresent()){
-                User usr = userOpt.get();
-                User frnd = friendOpt.get();
-                usr.getFriends().add(frnd);
-                frnd.getFriends().add(usr);
-
-                userRepository.save(usr);
-                userRepository.save(frnd);
-                return ResponseEntity.ok(true);
-            }
-
-            return ResponseEntity.ok(false);
-        }else{
-            //TODO:Hata dönmeli
-            return ResponseEntity.ok(false);
-        }
-    }
-
-    @Override
-    public ResponseEntity<List<User>> getFriends(Long userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if(userOpt.isPresent()){
-            return ResponseEntity.ok(userOpt.get().getFriends());
-        }else{
-            //TODO:Hata dönmeli
-            return ResponseEntity.ok(new ArrayList<>());
-        }
-
-    }
-
-    public String update(User user) {
-        return userRepository.save(user).toString();
-    }
 }

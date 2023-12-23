@@ -3,6 +3,7 @@ package com.catchybackend.controller;
 import com.catchybackend.business.concrete.AuthService;
 import com.catchybackend.business.dtos.UserLoginDto;
 import com.catchybackend.business.dtos.UserRegisterDto;
+import com.catchybackend.business.interfaces.IAuthService;
 import com.catchybackend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
     @Autowired
-    AuthService authService;
+    IAuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDto user) {
@@ -33,17 +34,5 @@ public class AuthController {
         return authService.register(userToRegister);
     }
 
-    @PostMapping("/update")
-    public String update(@RequestBody User user) {
-        return authService.update(user);
-    }
-    @PostMapping("/addFriend")
-    public ResponseEntity<Boolean>  addFriend(@RequestParam(name="userId")Long userId,@RequestParam(name="friendId")Long friendId){
-        return authService.addFriend(userId,friendId);
-    }
-    @GetMapping("/getFriends")
-    public ResponseEntity<List<User>> getFriends(@RequestParam(name="userId")Long userId)
-    {
-        return authService.getFriends(userId);
-    }
+
 }

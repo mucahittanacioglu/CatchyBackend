@@ -28,11 +28,15 @@ public class JwtService implements IJwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+
     @Override
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
+        Map<String, Object> claims = new HashMap<>();
+        // Add user ID to the claims
+        claims.put("userId", ((MyUserDetails)userDetails).getUserId());
 
+        return generateToken(claims, userDetails);
+    }
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);

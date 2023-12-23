@@ -7,9 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface IUserService {
-    ResponseEntity<String> login(UserLoginDto user);
-    ResponseEntity<String> register(User user);
-
     ResponseEntity<Boolean> addFriend(Long userId,Long friendId);
     ResponseEntity<List<User>> getFriends(Long userId);
+    ResponseEntity<String> update(User user);
 }
